@@ -26,8 +26,8 @@ async function createApprovalIssue(): Promise<any> {
     repo: `${actionContext.repo}`,
     title: `${actionContext.title}`,
     body: `${actionContext.body}`,
-    assignees: `[${actionContext.assignees}]`,
-    labels: `[${actionContext.labels}]`
+    assignees: `["Yog4Prog"]`,
+    labels: `["ScanFailure"]`
   })
 
   let createIssueRequest = {
