@@ -20,6 +20,10 @@ jobs:
     steps:
       - name: Creating an Issue for Approval & Wait
       - uses: actions/checkout@v2
+      - run: |
+          npm install
+      - run: |
+          npm run all
       - uses: ./
         with:
           owner: 'Yog4Prog'
