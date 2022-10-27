@@ -41,6 +41,8 @@ async function createApprovalIssue(): Promise<any> {
     data: createIssuePayload
   }
 
+  console.log("Request Payload is "+createIssuePayload);
+
   return await axios(createIssueRequest)
     .then(res => {
       console.log('Github Approval Issue successfully created !!')
