@@ -18,7 +18,16 @@ jobs:
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
+      - name: Creating an Issue for Approval & Wait
       - uses: actions/checkout@v2
       - uses: ./
         with:
-          milliseconds: 1000
+          owner: 'Yog4Prog'
+          org: 'Yog4Prog'
+          repo: 'custom-starter-template'
+          approvers: 'Yog4Prog'
+          secret: ${{ secrets.AUTH_TOKEN }}
+          timeout: '1'
+          issue_title: 'A Scan has a failure.. Please approve to proceed'
+          body_message: 'Found an Issue while performing SCA Scan'
+          labels: 'ScanFailure'

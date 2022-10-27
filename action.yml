@@ -1,11 +1,36 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Manual Approval Action'
+description: 'Pause a workflow/job and get approval to continue'
 inputs:
-  milliseconds: # change this
+  approvers:
+    description: 'Required Approvers'
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+  owner:
+    description: 'Issue Created By'
+    required: true
+  org:
+    description: 'Organization Name'
+    required: true
+  repo:
+    description: 'Repository Name'
+    required: true
+  timeout: 
+    description: 'Timeout in Minutes'
+    required: true
+    default: '1'
+  secret:
+    description: 'Secret'
+    required: true
+  issue_title:
+    description: 'The Approval title'
+    required: false
+  body_message:
+    description: 'Description for Issue body'
+    required: false
+    default: 'Found a bug need approval to continue'
+  labels: 
+    description: 'Label'
+    required: false
+    default: 'bug'
 runs:
   using: 'node16'
   main: 'dist/index.js'
