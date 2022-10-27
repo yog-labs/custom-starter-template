@@ -2,7 +2,7 @@ import {approvalContext} from './approvalcontext'
 import {approvedWords} from './constants'
 import {deniedWords} from './constants'
 import axios from 'axios'
-import core from '@actions/core'
+import * as core from '@actions/core'
 
 const actionContext: approvalContext = {
   owner: core.getInput('owner'),
