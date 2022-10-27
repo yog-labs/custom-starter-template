@@ -17,13 +17,18 @@ jobs:
           npm run all
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
+    needs: build
     steps:
-      - name: Creating an Issue for Approval & Wait
       - uses: actions/checkout@v2
+      - name: Creating an Issue for Approval & Wait
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
       - run: |
           npm install
-      - run: |
           npm run all
+          pwd
+          ls -a
       - uses: ./
         with:
           owner: 'Yog4Prog'
