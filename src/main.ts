@@ -13,7 +13,7 @@ const actionContext: approvalContext = {
   timeout: ~~core.getInput('timeout'),
   title: core.getInput('issue_title'),
   body: core.getInput('body_message'),
-  labels: core.getInput('labels').split('')
+  labels: core.getInput('labels').split(',')
 }
 
 const repoUrl = `https://api.github.com/repos/${actionContext.org}/${actionContext.repo}`
