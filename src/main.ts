@@ -59,7 +59,7 @@ async function createApprovalIssue(): Promise<any> {
 async function updateApprovalIssueOnComments(): Promise<any> {
   var commentListRequest = {
     method: 'GET',
-    url: `${repoUrl}/comments`,
+    url: `${repoUrl}/issues/${actionContext.issueNumber}/comments`,
     headers: {
       Authorization: `Bearer  ${actionContext.token}`,
       'Content-Type': 'application/json',
