@@ -3,6 +3,7 @@ import {approvedWords} from './constants'
 import {deniedWords} from './constants'
 import axios from 'axios'
 import * as core from '@actions/core'
+import {approvalBodyContent} from './issuetemplates'
 
 const actionContext: approvalContext = {
   owner: core.getInput('owner'),
@@ -25,7 +26,7 @@ async function createApprovalIssue(): Promise<any> {
     owner: `${actionContext.owner}`,
     repo: `${actionContext.repo}`,
     title: `${actionContext.title}`,
-    body: `${actionContext.body}`,
+    body: `${approvalBodyContent}`,
     assignees: [`${actionContext.assignees}`],
     labels: [`${actionContext.labels}`]
   })
