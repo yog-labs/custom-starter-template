@@ -1,12 +1,11 @@
-import {approvalContext} from './approvalcontext'
-import {approvedWords} from './constants'
-import {deniedWords} from './constants'
 import axios from 'axios'
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import {approvalBodyContent} from './issuetemplates'
+import * as template from './issuetemplates'
+import * as approvalContext from './approvalcontext'
+import * as constants from './constants'
 
-const actionContext: approvalContext = {
+const actionContext: approvalContext.approvalContext = {
   owner: core.getInput('owner'),
   org: core.getInput('org'),
   repo: core.getInput('repo'),
@@ -22,12 +21,16 @@ const repoUrl = `https://api.github.com/repos/${actionContext.org}/${actionConte
 let timeTrigger: any
 let timeDurationCheck: any
 
+function getBodyContent(): string {
+  return `${template.getWorkflowContext(github.context)}`
+}
+
 async function createApprovalIssue(): Promise<any> {
   let createIssuePayload = JSON.stringify({
     owner: `${actionContext.owner}`,
     repo: `${actionContext.repo}`,
     title: `${actionContext.title}`,
-    body: `${approvalBodyContent}`,
+    body: `${getBodyContent()}`,
     assignees: [`${actionContext.assignees}`],
     labels: [`${actionContext.labels}`]
   })
@@ -73,14 +76,14 @@ async function updateApprovalIssueOnComments(): Promise<any> {
     .then(async res => {
       if (res.data.length > 0) {
         if (
-          approvedWords.includes(
+          constants.approvedWords.includes(
             res.data[res.data.length - 1].body.toLowerCase()
           )
         ) {
           console.log(`${actionContext.assignees} Approved to proceed.`)
           await closeIssue()
         } else if (
-          deniedWords.includes(res.data[res.data.length - 1].body.toLowerCase())
+          constants.deniedWords.includes(res.data[res.data.length - 1].body.toLowerCase())
         ) {
           console.log(`${actionContext.assignees} Denied to proceed.`)
           // Fail the build..
@@ -134,7 +137,7 @@ async function run(): Promise<void> {
   console.log(`Branch Name:  ${github.context.ref}` );
   console.log(`Workflow Number: ${github.context.runNumber}` );
   console.log(`Last commit user: ${github.context.actor}`);
-  
+
   
   try {
     await createApprovalIssue()
