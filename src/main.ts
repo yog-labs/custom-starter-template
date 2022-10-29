@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import * as template from './issuebodycontents'
