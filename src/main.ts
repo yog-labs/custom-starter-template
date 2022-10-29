@@ -131,14 +131,6 @@ async function closeIssue(): Promise<any> {
 }
 
 async function run(): Promise<void> {
-  console.log("Fetching details of workflow run..");
-  console.log(`EventName:  ${github.context.eventName}` );
-  console.log(`WorkflowName:  ${github.context.workflow}` );
-  console.log(`Branch Name:  ${github.context.ref}` );
-  console.log(`Workflow Number: ${github.context.runNumber}` );
-  console.log(`Last commit user: ${github.context.actor}`);
-
-  
   try {
     await createApprovalIssue()
     timeTrigger = setInterval(updateApprovalIssueOnComments, 5000)
