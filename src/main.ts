@@ -129,6 +129,7 @@ async function closeIssue(): Promise<any> {
 
 async function run(): Promise<void> {
   console.log("Fetching details of workflow run..");
+  console.log(`github.context is ${JSON.stringify(github.context)}`);
   console.log(`github.eventName ${github.context.eventName}` );
   console.log(`github.workflowName ${github.context.workflow}` );
   console.log(`github.repository ${github.context.repo}` );
