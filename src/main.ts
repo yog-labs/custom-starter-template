@@ -24,7 +24,8 @@ let timeDurationCheck: any
 function getBodyContent(): string {
   return `
   ${template.getWorkflowDetails(github.context)}
-  # ${actionContext.body}
+  ## ${actionContext.body}
+  ${template.getApprovalTextDetails()}
   `
 }
 
