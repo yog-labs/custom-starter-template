@@ -12,18 +12,21 @@ export function getWorkflowDetails(context: any): string {
 export function getApprovalTextDetails(): string {
     let approvalKeyWords = ""
     constants.approvedWords.forEach((key) => {
-        approvalKeyWords = `${approvalKeyWords} ${key} (Or)`
+        approvalKeyWords = `${approvalKeyWords} \`${key}\`  `
         return `${approvalKeyWords}`
     })
     let deniedKeyWords = ""
     constants.deniedWords.forEach((key) => {
-        deniedKeyWords = `${deniedKeyWords} ${key} (Or)`
+        deniedKeyWords = `${deniedKeyWords} \`${key}\` (Or)`
         return `${deniedKeyWords}`
     })
     return `###### You are required to Approve (or) Reject the issue
-:green_book: You can approve by commenting following keywords
-${approvalKeyWords}
 
-:closed_book: Or you can reject by commenting following keywords
-${deniedKeyWords}`
+ Approve or Reject by commenting the below section with any of the following keywords
+   :green_book: ** Approved Keys ** ${approvalKeyWords}
+   :closed_book: ** Reject Keys ** ${deniedKeyWords}
+
+
+**Note:** If left uncommented the issue will be closed after the timeout period and the workflow will be marked unsuccessful.
+`
 }
