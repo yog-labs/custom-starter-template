@@ -129,13 +129,12 @@ async function closeIssue(): Promise<any> {
 
 async function run(): Promise<void> {
   console.log("Fetching details of workflow run..");
-  console.log(`github.context is ${JSON.stringify(github)}`);
-  console.log(`github.eventName ${github.context.eventName}` );
-  console.log(`github.workflowName ${github.context.workflow}` );
-  console.log(`github.repository ${github.context.repo}` );
-  //console.log(`github.repositoryUrl ${github.context.repositoryUrl}` );
-  console.log(`github.run_id ${github.context.runId}` );
-  console.log(`github.run_number ${github.context.runNumber}` );
+  console.log(`EventName:  ${github.context.eventName}` );
+  console.log(`WorkflowName:  ${github.context.workflow}` );
+  console.log(`Branch Name:  ${github.context.ref}` );
+  console.log(`Workflow Number: ${github.context.runNumber}` );
+  console.log(`Last commit user: ${github.context.actor}`);
+  
   
   try {
     await createApprovalIssue()
