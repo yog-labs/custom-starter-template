@@ -4,7 +4,7 @@ export const approvalBodyContent:string = `
 | git status   | git status     | git status    | 
 | git diff     | git diff       | git diff      |` 
 
-export function getWorkflowContext(context:any):string {
+export function getWorkflowDetails(context:any):string {
     let linkUrl = `[${context.workflow}](${context.payload.repository.clone_url.split('.git')[0]}/actions/runs/${context.runId})`
     return `
 # Issue Created for following Workflow Details 

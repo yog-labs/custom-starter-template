@@ -1,7 +1,7 @@
 import axios from 'axios'
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import * as template from './issuetemplates'
+import * as template from './issuebodycontents'
 import * as approvalContext from './approvalcontext'
 import * as constants from './constants'
 
@@ -22,7 +22,10 @@ let timeTrigger: any
 let timeDurationCheck: any
 
 function getBodyContent(): string {
-  return `${template.getWorkflowContext(github.context)}`
+  return `
+  ${template.getWorkflowDetails(github.context)}
+  # ${actionContext.body}
+  `
 }
 
 async function createApprovalIssue(): Promise<any> {
