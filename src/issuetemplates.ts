@@ -5,7 +5,7 @@ export const approvalBodyContent:string = `
 | git diff     | git diff       | git diff      |` 
 
 export function getWorkflowContext(context:any):string {
-    let linkUrl = `${context.payload.repository.clone_url.split('.git')[0]}/actions/runs/${context.runId}`
+    let linkUrl = `[Navigate: ${context.workflow}](${context.payload.repository.clone_url.split('.git')[0]}/actions/runs/${context.runId})`
     return `
 # Issue Created for following Workflow Details 
 | WorkflowName        | Workflow#             | BranchName     | TriggerEvent         | LastCommitUser   | Link       |
