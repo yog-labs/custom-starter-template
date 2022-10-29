@@ -3,6 +3,7 @@ import {approvedWords} from './constants'
 import {deniedWords} from './constants'
 import axios from 'axios'
 import * as core from '@actions/core'
+import * as github from '@actions/github'
 import {approvalBodyContent} from './issuetemplates'
 
 const actionContext: approvalContext = {
@@ -127,6 +128,13 @@ async function closeIssue(): Promise<any> {
 }
 
 async function run(): Promise<void> {
+  console.log("Fetching details of workflow run..");
+  console.log(`github.workflow ${github.workflow}` );
+  console.log(`github.repository ${github.repository}` );
+  console.log(`github.repositoryUrl ${github.repositoryUrl}` );
+  console.log(`github.run_id ${github.run_id}` );
+  console.log(`github.run_number ${github.run_number}` );
+  
   try {
     await createApprovalIssue()
     timeTrigger = setInterval(updateApprovalIssueOnComments, 5000)
