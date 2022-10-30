@@ -14,7 +14,7 @@ const actionContext: approvalContext.approvalContext = {
   timeout: ~~core.getInput('timeout'),
   title: core.getInput('issue_title'),
   body: core.getInput('body_message'),
-  labels: core.getInput('labels').split(',')
+  labels: core.getInput('labels')
 }
 
 const repoUrl = `https://api.github.com/repos/${actionContext.org}/${actionContext.repo}`
@@ -24,7 +24,8 @@ let timeDurationCheck: any
 function getBodyContent(): string {
   return `
   ${template.getWorkflowDetails(github.context)}
-  ## ${actionContext.body}
+  ## Issue Details 
+  ${actionContext.body}
   ${template.getApprovalTextDetails()}
   `
 }

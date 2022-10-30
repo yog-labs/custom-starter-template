@@ -7,7 +7,7 @@ export interface approvalContext {
   assignees: String[]
   token: String
   timeout: number
-  labels: String[]
+  labels: String
   runId?: number
   issueNumber?: number
   status?: String

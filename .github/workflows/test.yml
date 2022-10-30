@@ -36,4 +36,4 @@ jobs:
           timeout: '1'
           issue_title: 'A Scan has a failure.. Please approve to proceed'
           body_message: 'Found an Issue while performing SCA Scan'
-          labels: 'scan failure,approval required'
+          labels: "scan failure,approval required"
