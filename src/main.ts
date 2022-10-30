@@ -141,21 +141,51 @@ async function closeIssue(comment: string, failWorkflow: boolean): Promise<any> 
     data: commentIssuePayload
   }
 
+  let updateIssuePayloadApproved = JSON.stringify({
+    owner: `${actionContext.owner}`,
+    repo: `${actionContext.repo}`,
+    labels: ["scan failure","approved"]
+  })
+  
+  let updateIssuePayloadRejected = JSON.stringify({
+    owner: `${actionContext.owner}`,
+    repo: `${actionContext.repo}`,
+    labels: ["scan failure","rejected"]
+  })
+
+  let updateIssueRequest = {
+    method: 'PATCH',
+    url: `${repoUrl}/issues/${actionContext.issueNumber}`,
+    headers: {
+      Authorization: `Bearer  ${actionContext.token}`,
+      'Content-Type': 'application/json',
+      Accept: 'application/vnd.github.v3+json'
+    },
+    data: failWorkflow ? updateIssuePayloadRejected : updateIssuePayloadApproved
+  }
+
   return await axios(commentIssueRequest)
     .then(async res => {
-      console.log('Github Issue comment created !!')
+      console.log('Github Issue comment created !!');
       await axios(closeIssueRequest)
-        .then(cresp => {
-          console.log('Approval Request Closed!!')
-          clearInterval(timeTrigger)
-          clearTimeout(timeDurationCheck)
-          timeTrigger = false
+        .then(async cresp => {
+          console.log('Approval Request Closed!!');
+          await axios(updateIssueRequest)
+          .then(uresp => {
+            console.log("Approval Issue updated with label");
+          }).catch(uerror => {
+            console.log("Error! Unable to update labels on Issue "+ uerror );
+            throw uerror;
+          })
+          clearInterval(timeTrigger);
+          clearTimeout(timeDurationCheck);
+          timeTrigger = false;
           if (failWorkflow) {
-            core.setFailed(comment)
+            core.setFailed(comment);
           }
         })
         .catch(cerror => {
-          console.log('Exception occured while closing the issue' + cerror)
+          console.log("Error occured while closing the issue "+ cerror);
           throw cerror;
         })
     })
