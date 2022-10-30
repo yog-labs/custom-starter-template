@@ -65,6 +65,8 @@ async function createApprovalIssue(): Promise<any> {
     })
 }
 
+
+
 async function updateApprovalIssueOnComments(): Promise<any> {
   var commentListRequest = {
     method: 'GET',
@@ -85,13 +87,13 @@ async function updateApprovalIssueOnComments(): Promise<any> {
           )
         ) {
           console.log(`${actionContext.assignees} Approved to proceed.`)
-          await closeIssue()
+          await closeIssue("Approval received, workflow will continue..")
         } else if (
           constants.deniedWords.includes(res.data[res.data.length - 1].body.toLowerCase())
         ) {
           console.log(`${actionContext.assignees} Denied to proceed.`)
           // Fail the build..
-          await closeIssue()
+          await closeIssue("Approval denied!!. Workflow will be marked to failure. ")
         } else {
           console.log('No matching comments provided.. for Approve or Deny')
         }
@@ -104,7 +106,7 @@ async function updateApprovalIssueOnComments(): Promise<any> {
     })
 }
 
-async function closeIssue(): Promise<any> {
+async function closeIssue(comment:string): Promise<any> {
   var closeIssuePayload = JSON.stringify({
     owner: `${actionContext.owner}`,
     repo: `${actionContext.repo}`,
@@ -122,7 +124,28 @@ async function closeIssue(): Promise<any> {
     data: closeIssuePayload
   }
 
-  return await axios(closeIssueRequest)
+  let commentIssuePayload = JSON.stringify({
+    owner: `${actionContext.owner}`,
+    repo: `${actionContext.repo}`,
+    issue_number: 'ISSUE_NUMBER',
+    body: `${comment}`
+  })
+
+  let commentIssueRequest = {
+    method: 'POST',
+    url: `${repoUrl}/issues/${actionContext.issueNumber}/comments`,
+    headers: {
+      Authorization: `Bearer  ${actionContext.token}`,
+      'Content-Type': 'application/json',
+      Accept: 'application/vnd.github.v3+json'
+    },
+    data: commentIssuePayload
+  }
+  
+  return await axios(commentIssueRequest)
+  .then(async res => {
+    console.log('Github Issue comment created !!')
+    await axios(closeIssueRequest)
     .then(cresp => {
       console.log('Approval Request Closed!!')
       clearInterval(timeTrigger)
@@ -130,8 +153,15 @@ async function closeIssue(): Promise<any> {
       timeTrigger = false
     })
     .catch(cerror => {
-      console.log('Exception occured ' + cerror)
+      console.log('Exception occured while closing the issue' + cerror)
+      throw cerror;
     })
+  })
+  .catch(error => {
+    console.log('Failed to comments an Approval Issue.' + error)
+    if (error instanceof Error) core.setFailed(error.message)
+    throw error
+  })
 }
 
 async function run(): Promise<void> {
@@ -142,7 +172,7 @@ async function run(): Promise<void> {
       console.log(
         'Approval waiting period elapsed. Approval request will be automatically closed and workflow status will be marked to Failed.'
       )
-      await closeIssue()
+      await closeIssue('Approval waiting period elapsed. Approval request is automatically closed and workflow status is marked to Failed.')
     }, actionContext.timeout * 60 * 1000)
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
