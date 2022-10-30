@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import * as template from './issuebodycontents'
@@ -31,14 +31,12 @@ function getBodyContent(): string {
 }
 
 async function createApprovalIssue(): Promise<any> {
-  let tempLabel = actionContext.labels.map(label => `'${label}'`);
-  let tempAssignee = actionContext.assignees.map(assignee => `'${assignee}'`);
   let createIssuePayload = JSON.stringify({
     owner: `${actionContext.owner}`,
     repo: `${actionContext.repo}`,
     title: `${actionContext.title}`,
     body: `${getBodyContent()}`,
-    assignees: [`${actionContext.assignees}`],
+    assignees: actionContext.assignees,
     labels: actionContext.labels
   })
   console.log("Issue Create Payload is " + JSON.stringify(createIssuePayload));
