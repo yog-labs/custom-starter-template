@@ -3,7 +3,7 @@ import * as constants from './constants'
 export function getWorkflowDetails(context: any): string {
     let linkUrl = `[${context.workflow}](${context.payload.repository.clone_url.split('.git')[0]}/actions/runs/${context.runId})`
     return `
-# Issue created for following Workflow. 
+# Approval required for following Workflow to proceed. 
 | WorkflowName | Workflow#             | BranchName     | TriggerEvent         | LastCommitUser   | 
 | :---         | :---:                 | :---:          | :---:                | ---:             | 
 | ${linkUrl}   | ${context.runNumber}  | ${context.ref} | ${context.eventName} | ${context.actor} |`
