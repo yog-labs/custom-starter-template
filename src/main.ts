@@ -14,7 +14,7 @@ const actionContext: approvalContext.approvalContext = {
   timeout: ~~core.getInput('timeout'),
   title: core.getInput('issue_title'),
   body: core.getInput('body_message'),
-  labels: core.getInput('labels')
+  labels: core.getInput('labels').split(',')
 }
 
 const repoUrl = `https://api.github.com/repos/${actionContext.org}/${actionContext.repo}`
@@ -31,13 +31,15 @@ function getBodyContent(): string {
 }
 
 async function createApprovalIssue(): Promise<any> {
+  let tempLabel = actionContext.labels.map(label => `'${label}'`);
+  let tempAssignee = actionContext.assignees.map(assignee => `'${assignee}'`);
   let createIssuePayload = JSON.stringify({
     owner: `${actionContext.owner}`,
     repo: `${actionContext.repo}`,
     title: `${actionContext.title}`,
     body: `${getBodyContent()}`,
     assignees: [`${actionContext.assignees}`],
-    labels: [`${actionContext.labels}`]
+    labels: [`${tempLabel.join(',')}`]
   })
   console.log("Issue Create Payload is " + JSON.stringify(createIssuePayload));
   let createIssueRequest = {
