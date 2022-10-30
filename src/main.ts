@@ -39,7 +39,7 @@ async function createApprovalIssue(): Promise<any> {
     title: `${actionContext.title}`,
     body: `${getBodyContent()}`,
     assignees: [`${actionContext.assignees}`],
-    labels: tempLabel
+    labels: actionContext.labels
   })
   console.log("Issue Create Payload is " + JSON.stringify(createIssuePayload));
   let createIssueRequest = {
