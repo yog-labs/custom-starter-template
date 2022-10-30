@@ -39,7 +39,7 @@ async function createApprovalIssue(): Promise<any> {
     assignees: actionContext.assignees,
     labels: actionContext.labels
   })
-  console.log("Issue Create Payload is " + JSON.stringify(createIssuePayload));
+
   let createIssueRequest = {
     method: 'post',
     url: `${repoUrl}/issues`,
