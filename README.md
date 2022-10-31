@@ -61,8 +61,9 @@ flowchart TD
     I ----> Stop[Stop]
     C2 ----> C2A{TimeOut?}
     C2A -- Yes --> C2B[Set Workflow=BreakWithError]
+    C2B ----> C2C[Set TimerActive=false]
     C2A -- No --> C2
-    C2B ----> I
+    C2C ----> I
 ```
 
 ## Change action.yml
