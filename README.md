@@ -49,13 +49,15 @@ flowchart TD
     B ----> |Sleep Thread| D[Sleep for 'T Seconds'];
     C ----> E{IsTimerActive?};
     E -- Yes --> F{IssueCommented?}
+    E -- No --> Stop[Stop]
     F -- No --> C
-    F -- Yes --> G{comments matches approvedKey?}
-    F -- No --> J{comments matches deniedKey?}
+    F -- Yes --> |Approved| G{approvedKey?}
+    F -- No --> |Denied| J{deniedKey?}
     J -- Yes --> K[Set Workflow=BreakWithError]
-    k ----> I[Close Issue]
+    K ----> I[Close Issue]
     G -- Yes --> H[Set Workflow=Continue]
     H ---->  I[Close Issue]
+    I ----> Stop[Stop]
 ```
 
 ## Change action.yml
