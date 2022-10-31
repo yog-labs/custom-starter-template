@@ -45,11 +45,17 @@ $ npm test
 ```mermaid
 flowchart TD
     A[Start/WorkflowTrigger] --> B[Create Issue];
-    B ----> C[Repeat every 'P Seconds'];
-    B ----> D[Sleep for 'T Seconds'];
+    B ----> |SetInterval Thread| C[Repeat every 'P Seconds'];
+    B ----> |Sleep Thread| D[Sleep for 'T Seconds'];
     C ----> E{IsTimerActive?};
     E -- Yes --> F{IssueCommented?}
-    E -- No --> C
+    F -- No --> C
+    F -- Yes --> G{comments matches approvedKey?}
+    F -- No --> J{comments matches deniedKey?}
+    J -- Yes --> K[Set Workflow=BreakWithError]
+    k ----> I[Close Issue]
+    G -- Yes --> H[Set Workflow=Continue]
+    H ---->  I[Close Issue]
 ```
 
 ## Change action.yml
