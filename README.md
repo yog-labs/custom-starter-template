@@ -44,7 +44,7 @@ $ npm test
 
 ```mermaid
 flowchart TD
-   A[Start/WorkflowTrigger] --> B[Create Issue];
+   A(Start/WorkflowTrigger) --> B[Create Issue];
     B ----> |SetInterval Thread| C1[Repeat every 'P Seconds'];
     B ----> |Sleep Thread| C2[Sleep for 'T Seconds'];
     C1 ----> C1A{IsTimerActive?};
@@ -59,14 +59,18 @@ flowchart TD
     C1E -- No --> C1
     C1F ----> I[Close Issue]
     I ----> J[Set TimerActive=false]
-    J ----> Stop[Stop]
+    J ----> Stop(Stop)
     C2 ----> C2A{TimeOut?}
     C2A -- Yes --> C2B[Set TimerActive=false]
     C2B ----> C2C[Set Workflow=BreakWithError]
     C2A -- No --> C2
     C2C ----> I
     style A fill:#f96;
-    style Stop fill:#96;
+    style Stop fill:#f96;
+    style C1D fill:#0FFF50
+    style C1F fill:#FF5733
+    style C2B fill:#FF5733
+
 ```
 
 ## Change action.yml
