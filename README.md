@@ -44,9 +44,9 @@ $ npm test
 
 ```mermaid
 flowchart TD
-    A[Deploy to Production] --> B{Is it Friday?};
-    B -- Yes --> C[Do not deploy];
-    B -- No  --> D[Run deploy.sh to deploy]
+    A[Start/WorkflowTrigger] --> B[Create Issue];
+    B ----> C[SetInterval 'P Seconds'];
+    B ----> C[SetTimeout 'T Seconds'];
     C ----> E[Enjoy your weekend];
     D ----> E[Enjoy your weekend];
 ```
