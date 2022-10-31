@@ -58,7 +58,8 @@ flowchart TD
     C1E -- Yes --> C1F[Set Workflow=BreakWithError]
     C1E -- No --> C1
     C1F ----> I[Close Issue]
-    I ----> Stop[Stop]
+    I ----> J[Set TimerActive=false]
+    J ----> Stop[Stop]
     C2 ----> C2A{TimeOut?}
     C2A -- Yes --> C2B[Set TimerActive=false]
     C2B ----> C2C[Set Workflow=BreakWithError]
