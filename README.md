@@ -60,8 +60,8 @@ flowchart TD
     C1F ----> I[Close Issue]
     I ----> Stop[Stop]
     C2 ----> C2A{TimeOut?}
-    C2A -- Yes --> C2B[Set Workflow=BreakWithError]
-    C2B ----> C2C[Set TimerActive=false]
+    C2A -- Yes --> C2B[Set TimerActive=false]
+    C2B ----> C2C[Set Workflow=BreakWithError]
     C2A -- No --> C2
     C2C ----> I
 ```
