@@ -40,6 +40,17 @@ $ npm test
 ...
 ```
 
+## Sample Flow Chart
+
+```mermaid
+flowchart TD
+    A[Deploy to Production] --> B(Is it Friday?);
+    B -- Yes --> C[Do not deploy];
+    B -- No  --> D[Run deploy.sh to deploy]
+    C ----> E[Enjoy your weekend];
+    D ----> E[Enjoy your weekend];
+```
+
 ## Change action.yml
 
 The action.yml defines the inputs and output for your action.
