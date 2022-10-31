@@ -43,7 +43,7 @@ $ npm test
 ## Manual Approval Action Flow Chart
 
 ```mermaid
-flowchart TD
+flowchart LR
    A[Start/WorkflowTrigger] --> B[Create Issue];
     B ----> |SetInterval Thread| C1[Repeat every 'P Seconds'];
     B ----> |Sleep Thread| C2[Sleep for 'T Seconds'];
