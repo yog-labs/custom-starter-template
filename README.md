@@ -46,8 +46,7 @@ $ npm test
 flowchart TD
     A[Start/WorkflowTrigger] --> B[Create Issue];
     B ----> C[SetInterval 'P Seconds'];
-    B ----> C[SetTimeout 'T Seconds'];
-    C ----> E[Enjoy your weekend];
+    B ----> D[SetTimeout 'T Seconds'];
     D ----> E[Enjoy your weekend];
 ```
 
