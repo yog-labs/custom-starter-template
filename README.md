@@ -44,7 +44,7 @@ $ npm test
 
 ```mermaid
 flowchart TD
-    A[Deploy to Production] --> B(Is it Friday?);
+    A[Deploy to Production] --> B{Is it Friday?};
     B -- Yes --> C[Do not deploy];
     B -- No  --> D[Run deploy.sh to deploy]
     C ----> E[Enjoy your weekend];
