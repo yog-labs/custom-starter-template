@@ -1,44 +1,26 @@
-<p align="center">
-  <a href="https://github.com/actions/typescript-action/actions"><img alt="typescript-action status" src="https://github.com/actions/typescript-action/workflows/build-test/badge.svg"></a>
-</p>
+# Manual Workflow Approval
 
-# Create a JavaScript Action using TypeScript
+[![ci](https://github.com/trstringer/manual-approval/actions/workflows/ci.yaml/badge.svg)](https://github.com/trstringer/manual-approval/actions/workflows/ci.yaml)
 
-Use this template to bootstrap the creation of a TypeScript action.:rocket:
+Pause a GitHub Actions workflow and require manual approval from one or more approvers before continuing.
 
-This template includes compilation support, tests, a validation workflow, publishing, and versioning guidance.  
+This is a very common feature for a deployment or release pipeline, and while [this functionality is available from GitHub](https://docs.github.com/en/actions/managing-workflow-runs/reviewing-deployments), it requires the use of environments and if you want to use this for private repositories then you need GitHub Enterprise. This action provides manual approval without the use of environments, and is freely available to use on private repositories.
 
-If you are new, there's also a simpler introduction.  See the [Hello World JavaScript Action](https://github.com/actions/hello-world-javascript-action)
+*Note: This approval duration is subject to the broader 72 hours timeout for a workflow. So keep that in mind when figuring out how quickly an approver must respond.*
 
-## Create an action from this template
+The way this action works is the following:
 
-Click the `Use this Template` and provide the new repo details for your action
+1. Workflow comes to the `manual-approval` action.
+1. `manual-approval` will create an issue in the containing repository and assign it to the `approvers`.
+1. If and once all approvers respond with an approved keyword, the workflow will continue.
+1. If any of the approvers responds with a denied keyword, then the workflow will exit with a failed status.
 
-## Code in Main
+* Approval keywords - "approve", "approved", "lgtm", "yes"
+* Denied keywords - "deny", "denied", "no"
 
-> First, you'll need to have a reasonably modern version of `node` handy. This won't work with versions older than 9, for instance.
+These are case insensitive with optional punctuation either a period or an exclamation mark.
 
-Install the dependencies  
-```bash
-$ npm install
-```
-
-Build the typescript and package it for distribution
-```bash
-$ npm run build && npm run package
-```
-
-Run the tests :heavy_check_mark:  
-```bash
-$ npm test
-
- PASS  ./index.test.js
-  ✓ throws invalid number (3ms)
-  ✓ wait 500 ms (504ms)
-  ✓ test runs (95ms)
-
-...
-```
+In all cases, `manual-approval` will close the initial GitHub issue.
 
 ## Manual Approval Action Flow Chart
 
@@ -73,66 +55,45 @@ flowchart TD
 
 ```
 
-## Change action.yml
-
-The action.yml defines the inputs and output for your action.
-
-Update the action.yml with your name, description, inputs and outputs for your action.
-
-See the [documentation](https://help.github.com/en/articles/metadata-syntax-for-github-actions)
-
-## Change the Code
-
-Most toolkit and CI/CD operations involve async operations so the action is run in an async function.
-
-```javascript
-import * as core from '@actions/core';
-...
-
-async function run() {
-  try { 
-      ...
-  } 
-  catch (error) {
-    core.setFailed(error.message);
-  }
-}
-
-run()
-```
-
-See the [toolkit documentation](https://github.com/actions/toolkit/blob/master/README.md#packages) for the various packages.
-
-## Publish to a distribution branch
-
-Actions are run from GitHub repos so we will checkin the packed dist folder. 
-
-Then run [ncc](https://github.com/zeit/ncc) and push the results:
-```bash
-$ npm run package
-$ git add dist
-$ git commit -a -m "prod dependencies"
-$ git push origin releases/v1
-```
-
-Note: We recommend using the `--license` option for ncc, which will create a license file for all of the production node modules used in your project.
-
-Your action is now published! :rocket: 
-
-See the [versioning documentation](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
-
-## Validate
-
-You can now validate the action by referencing `./` in a workflow in your repo (see [test.yml](.github/workflows/test.yml))
+## Usage
 
 ```yaml
-uses: ./
-with:
-  milliseconds: 1000
+steps:
+  - uses: yog4prog/custom-starter-template@v1
+    with:
+      owner: 'Yog4Prog'
+          org: 'Yog4Prog'
+          repo: 'custom-starter-template'
+          approvers: 'Yog4Prog'
+          secret: ${{ secrets.AUTH_TOKEN }}
+          timeout-minutes: '1'
+          issue_title: 'A Scan has a failure.. Please approve to proceed'
+          body_message: 'Found an Issue while performing SCA Scan'
+          labels: "scan failure,approval required"
 ```
 
-See the [actions tab](https://github.com/actions/typescript-action/actions) for runs of this action! :rocket:
+- `approvers` is a comma-delimited list of all required approvers. An approver can either be a user or an org team. (*Note: Required approvers must have the ability to be set as approvers in the repository. If you add an approver that doesn't have this permission then you would receive an HTTP/402 Validation Failed error when running this action*)
+- `labels` is a comma-delimited list of labels available in the repositpry, if the label doesn't exist then corresponding label is created.
+- `issue-title` is a string that will be appened to the title of the issue.
 
-## Usage:
 
-After testing you can [create a v1 tag](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md) to reference the stable and latest V1 action
+## Timeout
+
+If you'd like to force a timeout of your workflow pause, you can specify `timeout-minutes` at either the [step](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepstimeout-minutes) level or the [job](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idtimeout-minutes) level.
+
+For instance, if you want your manual approval step to timeout after an hour you could do the following:
+
+```yaml
+steps:
+  - uses: trstringer/manual-approval@v1
+    timeout-minutes: 60
+    ...
+```
+
+## Limitations
+
+* While the workflow is paused, it will still continue to consume a concurrent job allocation out of the [max concurrent jobs](https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration#usage-limits).
+* A job (including a paused job) will be failed [after 6 hours](https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration#usage-limits).
+* A paused job is still running compute/instance/virtual machine and will continue to incur costs.
+
+
