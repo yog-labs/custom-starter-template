@@ -52,8 +52,9 @@ flowchart TD
     E -- No --> Stop[Stop]
     F -- No --> C
     F -- Yes --> G{approvedKey?}
-    F -- No --> J{deniedKey?}
+    G -- No --> J{deniedKey?}
     J -- Yes --> K[Set Workflow=BreakWithError]
+    J -- No --> C
     K ----> I[Close Issue]
     G -- Yes --> H[Set Workflow=Continue]
     H ---->  I[Close Issue]
