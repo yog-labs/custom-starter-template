@@ -40,7 +40,7 @@ $ npm test
 ...
 ```
 
-## Sample Flow Chart
+## Manual Approval Action Flow Chart
 
 ```mermaid
 flowchart TD
