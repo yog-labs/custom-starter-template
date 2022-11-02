@@ -32,7 +32,7 @@ jobs:
           org: 'Yog4Prog'
           repo: 'custom-starter-template'
           approvers: 'Yog4Prog'
-          secret: ${{ secrets.AUTH_TOKEN }}
+          secret: ${{ secrets.MY_TEST_TOKEN }}
           timeout: '1'
           issue_title: 'A Scan has a failure.. Please approve to proceed'
           body_message: 'Found an Issue while performing SCA Scan'
