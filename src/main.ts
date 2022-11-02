@@ -4,6 +4,7 @@ import * as github from '@actions/github'
 import * as template from './issuebodycontents'
 import * as approvalContext from './approvalcontext'
 import * as constants from './constants'
+import request from 'request-promise'
 
 const actionContext: approvalContext.approvalContext = {
   owner: core.getInput('owner'),
@@ -64,9 +65,25 @@ async function createApprovalIssue(): Promise<any> {
     })
 }
 
-
-
 async function updateApprovalIssueOnComments(): Promise<any> {
+  
+  var commentListRequest = {
+    method: 'GET',
+    url: `${repoUrl}/issues/${actionContext.issueNumber}/comments`,
+    headers: {
+      Authorization: `Bearer  ${actionContext.token}`,
+      'Content-Type': 'application/json',
+      Accept: 'application/vnd.github.v3+json'
+    },
+    json: true
+  }
+
+  const res = await request(commentListRequest);
+  console.log("response is "+ JSON.stringify(res));
+  return res;
+}
+
+async function updateApprovalIssueOnComments1(): Promise<any> {
   var commentListRequest = {
     method: 'GET',
     url: `${repoUrl}/issues/${actionContext.issueNumber}/comments`,
