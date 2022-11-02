@@ -81,6 +81,7 @@ async function updateApprovalIssueOnComments(): Promise<any> {
   const res = await request(commentListRequest);
   console.log("response is "+ JSON.stringify(res));
   return res;
+  
 }
 
 async function updateApprovalIssueOnComments1(): Promise<any> {
