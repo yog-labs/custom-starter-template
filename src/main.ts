@@ -5,7 +5,9 @@ import * as template from './issuebodycontents'
 import * as approvalContext from './approvalcontext'
 import * as constants from './constants'
 import request from 'request-promise'
-const { Octokit } = require("octokit")
+import { Octokit } from 'octokit'
+
+//const { Octokit } = require("octokit")
 
 const actionContext: approvalContext.approvalContext = {
   owner: core.getInput('owner'),
@@ -53,8 +55,15 @@ async function createApprovalIssue(): Promise<any> {
     },
     data: createIssuePayload
   }
-
-  await octokit.request(`POST /repos/${actionContext.org}/${actionContext.repo}/issues`, createIssuePayload)
+  
+  const { status, headers, data } = await octokit.request(`POST /repos/${actionContext.org}/${actionContext.repo}/issues`, createIssuePayload)
+  console.log("Status reported is " + status);
+  console.log("Header reported is " + headers);
+  console.log("data reported is "+ JSON.stringify(data));
+  
+   
+  
+  
   
   /* return await axios(createIssueRequest)
     .then(res => {
