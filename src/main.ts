@@ -67,7 +67,33 @@ async function createApprovalIssue(): Promise<any> {
 
 async function updateApprovalIssueOnComments(): Promise<any> {
   
-  var commentListRequest = {
+  const req = {
+    method: 'GET',
+    uri: `${repoUrl}/issues/${actionContext.issueNumber}/comments`,
+    headers: {
+      'Authorization': `Bearer  ${actionContext.token}`,
+      'Content-Type': 'application/json',
+      'Accept': 'application/vnd.github.v3+json',
+      'user-agent': 'custom-action'
+    },
+    json: true
+  }
+   
+  console.log("Sending request...");
+  request.get(req, (error, response) => {
+    if(error)
+    {
+      console.log("Error OCcured: "+ error)
+    }
+    else{
+      console.log("Response is " +response.body)
+    }
+  })
+
+
+ 
+ 
+  /* var commentListRequest = {
     method: 'GET',
     url: `${repoUrl}/issues/${actionContext.issueNumber}/comments`,
     headers: {
@@ -86,7 +112,7 @@ async function updateApprovalIssueOnComments(): Promise<any> {
       console.log("response is "+ JSON.stringify(resp.data));
    })
   return res;
-
+ */
 }
 
 async function updateApprovalIssueOnComments1(): Promise<any> {
