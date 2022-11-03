@@ -94,7 +94,23 @@ async function checkCommentsToUpdateIssue(): Promise<any> {
   {
     const { status, headers, data } = await octokit.request(`GET /repos/${actionContext.org}/${actionContext.repo}/issues/${actionContext.issueNumber}/comments`, getIssueCommentsPayload)
     console.log(`Status code for ${repoUrl}/issues/${actionContext.issueNumber}/comments ${status}`);
-    console.log("Data is " + JSON.stringify(data));
+    if (data.length > 0)
+      {
+        if (constants.approvedWords.includes(data[data.length - 1].body.toLowerCase())) {
+          console.log(`${actionContext.assignees} Approved to proceed.`)
+          await closeIssue("Approval received, workflow will continue..", false)
+        } else if (constants.deniedWords.includes(data[data.length - 1].body.toLowerCase())) {
+          console.log(`${actionContext.assignees} Denied to proceed.`)
+          // Fail the build..
+          await closeIssue("Approval denied!!. Workflow will be marked to failure. ", true)
+        } else {
+          console.log('No matching comments provided.. for Approve or Deny')
+        }
+      }
+      else
+      {
+        console.log('Pending approval, awaiting ..')
+      }
   } catch(error)
   {
     console.log('Failed to Get Approval Issue.' + error)
