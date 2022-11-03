@@ -42,7 +42,7 @@ async function createApprovalIssue(): Promise<any> {
   }
 
   let createIssueRequest = {
-    method: 'post',
+    method: 'POST',
     uri: `${repoUrl}/issues`,
     headers: {
       'Authorization': `Bearer ${actionContext.token}`,
@@ -50,7 +50,7 @@ async function createApprovalIssue(): Promise<any> {
       'Accept': 'application/vnd.github.v3+json',
       'user-agent': 'manual-approval-action'
     },
-    data: createIssuePayload
+    body: createIssuePayload
   }
   request.post(createIssueRequest, (error, resp) => {
     if(error)
