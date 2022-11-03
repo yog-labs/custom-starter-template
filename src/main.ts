@@ -77,8 +77,11 @@ async function updateApprovalIssueOnComments(): Promise<any> {
     },
     json: true
   }
-
-  const res = await request(commentListRequest);
+  const res = axios.get( `${repoUrl}/issues/${actionContext.issueNumber}/comments`,{headers: {
+    Authorization: `Bearer  ${actionContext.token}`,
+    'Content-Type': 'application/json',
+    Accept: 'application/vnd.github.v3+json'
+  }})
   console.log("response is "+ JSON.stringify(res));
   return res;
 
