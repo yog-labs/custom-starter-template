@@ -222,7 +222,7 @@ async function closeIssue(comment: string, failWorkflow: boolean): Promise<any> 
   let commentIssuePayload = JSON.stringify({
     owner: `${actionContext.owner}`,
     repo: `${actionContext.repo}`,
-    issue_number: 'ISSUE_NUMBER',
+    issue_number: `${actionContext.issueNumber}`,
     body: `${comment}`
   })
 
