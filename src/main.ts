@@ -77,6 +77,7 @@ async function updateApprovalIssueOnComments(): Promise<any> {
     },
     json: true
   }
+  console.log(`Repo is: ${repoUrl}/issues/${actionContext.issueNumber}/comments`)
   const res = axios.get( `${repoUrl}/issues/${actionContext.issueNumber}/comments`,{headers: {
     Authorization: `Bearer  ${actionContext.token}`,
     'Content-Type': 'application/json',
