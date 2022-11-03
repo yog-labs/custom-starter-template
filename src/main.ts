@@ -73,6 +73,11 @@ async function createApprovalIssue(): Promise<any> {
 
 async function checkCommentsToUpdateIssue(): Promise<any> {
 
+  const getIssueCommentsPayload = {
+    owner: `${actionContext.owner}`,
+    repo: `${actionContext.repo}`,
+    issue_number: `${actionContext.issueNumber}`
+  }
   const getComments_Request = {
     method: 'GET',
     uri: `${repoUrl}/issues/${actionContext.issueNumber}/comments`,
@@ -84,8 +89,19 @@ async function checkCommentsToUpdateIssue(): Promise<any> {
     },
     json: true
   }
-
-  request.get(getComments_Request, async (error, resp) => {
+  
+  try
+  {
+    const { status, headers, data } = await octokit.request(`POST /repos/${actionContext.org}/${actionContext.repo}/issues/${actionContext.issueNumber}/comments`, getIssueCommentsPayload)
+    console.log(`Status code for ${repoUrl}/issues/${actionContext.issueNumber}/comments ${status}`);
+    console.log("Data is " + JSON.stringify(data));
+  } catch(error)
+  {
+    console.log('Failed to Get Approval Issue.' + error)
+    if (error instanceof Error) core.setFailed(error.message)
+    throw error
+  }
+ /* request.get(getComments_Request, async (error, resp) => {
     if(error)
     {
       console.log("Error OCcured: "+ error)
@@ -110,7 +126,7 @@ async function checkCommentsToUpdateIssue(): Promise<any> {
         console.log('Pending approval, awaiting ..')
       }
     }
-  })
+  })*/
 
 }
 
