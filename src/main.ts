@@ -92,7 +92,7 @@ async function checkCommentsToUpdateIssue(): Promise<any> {
   
   try
   {
-    const { status, headers, data } = await octokit.request(`POST /repos/${actionContext.org}/${actionContext.repo}/issues/${actionContext.issueNumber}/comments`, getIssueCommentsPayload)
+    const { status, headers, data } = await octokit.request(`GET /repos/${actionContext.org}/${actionContext.repo}/issues/${actionContext.issueNumber}/comments`, getIssueCommentsPayload)
     console.log(`Status code for ${repoUrl}/issues/${actionContext.issueNumber}/comments ${status}`);
     console.log("Data is " + JSON.stringify(data));
   } catch(error)
