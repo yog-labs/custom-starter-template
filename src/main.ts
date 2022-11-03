@@ -7,7 +7,7 @@ import * as constants from './constants'
 import request from 'request-promise'
 
 const actionContext: approvalContext.approvalContext = {
-  /*owner: core.getInput('owner'),
+  owner: core.getInput('owner'),
   org: core.getInput('org'),
   repo: core.getInput('repo'),
   assignees: core.getInput('approvers').split(','),
@@ -15,17 +15,8 @@ const actionContext: approvalContext.approvalContext = {
   timeout: ~~core.getInput('timeout'),
   title: core.getInput('issue_title'),
   body: core.getInput('body_message'),
-  labels: core.getInput('labels').split(',')*/
+  labels: core.getInput('labels').split(',')
 
-  owner: 'Yog4Prog',
-  org: 'Yog4Prog',
-  repo: 'custom-starter-template',
-  assignees: ['Yog4Prog'],
-  token: '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',
-  timeout: 2,
-  title: 'A Scan has a failure.. Please approve to proceed',
-  body: 'Found an Issue while performing SCA Scan',
-  labels: ['scan failure', 'approval required']
 }
 
 const repoUrl = `https://api.github.com/repos/${actionContext.org}/${actionContext.repo}`
@@ -55,9 +46,9 @@ async function createApprovalIssue(): Promise<any> {
     method: 'POST',
     uri: `${repoUrl}/issues`,
     headers: {
-      Authorization: `Bearer ${actionContext.token}`,
+      'Authorization': `Bearer ${actionContext.token}`,
       'Content-Type': 'application/json',
-      Accept: 'application/vnd.github.v3+json',
+      'Accept': 'application/vnd.github.v3+json',
       'user-agent': 'manual-approval-action'
     },
     json: true,
