@@ -43,7 +43,7 @@ async function createApprovalIssue(): Promise<any> {
 
   let createIssueRequest = {
     method: 'post',
-    url: `${repoUrl}/issues`,
+    uri: `${repoUrl}/issues`,
     headers: {
       Authorization: `Bearer ${actionContext.token}`,
       'Content-Type': 'application/json',
@@ -51,7 +51,20 @@ async function createApprovalIssue(): Promise<any> {
     },
     data: createIssuePayload
   }
+  request.post(createIssueRequest, (error, resp) => {
+    if(error)
+    {
+      console.log("Error OCcured: "+ error)
+    }
+    else{
+      console.log("Status code "+ resp.statusCode);
+      console.log("response is "+ JSON.stringify(resp))
+      console.log("Response is " +resp)
+    }
+  })
 
+  
+  /*
   return await axios(createIssueRequest)
     .then(res => {
       console.log('Github Approval Issue successfully created !!')
@@ -62,7 +75,7 @@ async function createApprovalIssue(): Promise<any> {
       console.log('Failed to create an Github Approval Issue.' + error)
       if (error instanceof Error) core.setFailed(error.message)
       throw error
-    })
+    })*/
 }
 
 async function updateApprovalIssueOnComments(): Promise<any> {
@@ -222,13 +235,13 @@ async function closeIssue(comment: string, failWorkflow: boolean): Promise<any> 
 async function run(): Promise<void> {
   try {
     await createApprovalIssue()
-    timeTrigger = setInterval(updateApprovalIssueOnComments, 5000)
+  /*  timeTrigger = setInterval(updateApprovalIssueOnComments, 5000)
     timeDurationCheck = setTimeout(async function () {
       console.log(
         'Approval waiting period elapsed. Approval request will be automatically closed and workflow status will be marked to Failed.'
       )
       await closeIssue('Approval waiting period elapsed. Approval request is automatically closed and workflow status is marked to Failed.', true)
-    }, actionContext.timeout * 60 * 1000)
+    }, actionContext.timeout * 60 * 1000)*/
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }
