@@ -86,7 +86,9 @@ async function updateApprovalIssueOnComments(): Promise<any> {
       console.log("Error OCcured: "+ error)
     }
     else{
-      console.log("Response is " +response.body)
+      console.log("Status code "+ response.statusCode);
+      console.log("response is "+ JSON.stringify(response))
+      console.log("Response is " +response)
     }
   })
 
