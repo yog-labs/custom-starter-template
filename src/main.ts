@@ -262,7 +262,7 @@ async function closeIssue(comment: string, failWorkflow: boolean): Promise<any> 
     },
     data: failWorkflow ? updateIssuePayloadRejected : updateIssuePayloadApproved
   }
-  
+  console.log(JSON.stringify(commentIssue_Request));
   return await request.post(commentIssue_Request)
     .then(async res => {
       console.log('Github Issue comment created !!');
