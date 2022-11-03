@@ -83,7 +83,7 @@ async function updateApprovalIssueOnComments(): Promise<any> {
     'Content-Type': 'application/json',
     Accept: 'application/vnd.github.v3+json'
   }}).then(resp => {
-      console.log("response is "+ resp);
+      console.log("response is "+ JSON.stringify(resp.data));
    })
   return res;
 
