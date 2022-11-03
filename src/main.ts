@@ -5,6 +5,7 @@ import * as template from './issuebodycontents'
 import * as approvalContext from './approvalcontext'
 import * as constants from './constants'
 import request from 'request-promise'
+const { Octokit } = require("octokit")
 
 const actionContext: approvalContext.approvalContext = {
   owner: core.getInput('owner'),
@@ -17,6 +18,7 @@ const actionContext: approvalContext.approvalContext = {
   body: core.getInput('body_message'),
   labels: core.getInput('labels').split(',')
 }
+const octokit = new Octokit({auth: `${actionContext.token}`});
 
 const repoUrl = `https://api.github.com/repos/${actionContext.org}/${actionContext.repo}`
 let timeTrigger: any
@@ -52,7 +54,9 @@ async function createApprovalIssue(): Promise<any> {
     data: createIssuePayload
   }
 
-  return await axios(createIssueRequest)
+  await octokit.request(`POST /repos/${actionContext.org}/${actionContext.repo}/issues`, createIssuePayload)
+  
+  /* return await axios(createIssueRequest)
     .then(res => {
       console.log('Github Approval Issue successfully created !!')
       actionContext.issueNumber = res.data.number
@@ -62,7 +66,7 @@ async function createApprovalIssue(): Promise<any> {
       console.log('Failed to create an Github Approval Issue.' + error)
       if (error instanceof Error) core.setFailed(error.message)
       throw error
-    })
+    }) */
 }
 
 
