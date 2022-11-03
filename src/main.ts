@@ -207,9 +207,9 @@ async function closeIssue(comment: string, failWorkflow: boolean): Promise<any> 
     state: 'closed'
   })
 
-  var closeIssueRequest = {
+  var closeIssue_Request = {
     method: 'PATCH',
-    url: `${repoUrl}/issues/${actionContext.issueNumber}`,
+    uri: `${repoUrl}/issues/${actionContext.issueNumber}`,
     headers: {
       Authorization: `Bearer  ${actionContext.token}`,
       'Content-Type': 'application/json',
@@ -225,9 +225,9 @@ async function closeIssue(comment: string, failWorkflow: boolean): Promise<any> 
     body: `${comment}`
   })
 
-  let commentIssueRequest = {
+  let commentIssue_Request = {
     method: 'POST',
-    url: `${repoUrl}/issues/${actionContext.issueNumber}/comments`,
+    uri: `${repoUrl}/issues/${actionContext.issueNumber}/comments`,
     headers: {
       Authorization: `Bearer  ${actionContext.token}`,
       'Content-Type': 'application/json',
@@ -248,7 +248,7 @@ async function closeIssue(comment: string, failWorkflow: boolean): Promise<any> 
     labels: ["scan failure","rejected"]
   })
 
-  let updateIssueRequest = {
+  let updateIssue_Request = {
     method: 'PATCH',
     url: `${repoUrl}/issues/${actionContext.issueNumber}`,
     headers: {
@@ -258,14 +258,14 @@ async function closeIssue(comment: string, failWorkflow: boolean): Promise<any> 
     },
     data: failWorkflow ? updateIssuePayloadRejected : updateIssuePayloadApproved
   }
-
-  return await axios(commentIssueRequest)
+  
+  return await request.post(commentIssue_Request)
     .then(async res => {
       console.log('Github Issue comment created !!');
-      await axios(closeIssueRequest)
+      await request.patch(closeIssue_Request)
         .then(async cresp => {
           console.log('Approval Request Closed!!');
-          await axios(updateIssueRequest)
+          await request.patch(updateIssue_Request)
           .then(uresp => {
             console.log("Approval Issue updated with label");
           }).catch(uerror => {
