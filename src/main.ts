@@ -235,7 +235,8 @@ async function closeIssue(comment: string, failWorkflow: boolean): Promise<any> 
       'Accept': 'application/vnd.github.v3+json',
       'user-agent': 'manual-approval-action'
     },
-    data: commentIssuePayload
+    data: commentIssuePayload,
+    json: true
   }
 
   let updateIssuePayloadApproved = JSON.stringify({
@@ -252,7 +253,7 @@ async function closeIssue(comment: string, failWorkflow: boolean): Promise<any> 
 
   let updateIssue_Request = {
     method: 'PATCH',
-    url: `${repoUrl}/issues/${actionContext.issueNumber}`,
+    uri: `${repoUrl}/issues/${actionContext.issueNumber}`,
     headers: {
       'Authorization': `Bearer  ${actionContext.token}`,
       'Content-Type': 'application/json',
