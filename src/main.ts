@@ -65,9 +65,54 @@ async function createApprovalIssue(): Promise<any> {
     })
 }
 
+
+async function checkCommentsToUpdateIssue(): Promise<any> {
+
+  const getComments_Request = {
+    method: 'GET',
+    uri: `${repoUrl}/issues/${actionContext.issueNumber}/comments`,
+    headers: {
+      'Authorization': `Bearer  ${actionContext.token}`,
+      'Content-Type': 'application/json',
+      'Accept': 'application/vnd.github.v3+json',
+      'user-agent': 'custom-action'
+    },
+    json: true
+  }
+
+  request.get(getComments_Request, async (error, resp) => {
+    if(error)
+    {
+      console.log("Error OCcured: "+ error)
+    }
+    else{
+      console.log(`Status code for ${repoUrl}/issues/${actionContext.issueNumber}/comments ${resp.statusCode}`);
+      if (resp.body.length > 0)
+      {
+        if (constants.approvedWords.includes(resp.body[resp.body.length - 1].body.toLowerCase())) {
+          console.log(`${actionContext.assignees} Approved to proceed.`)
+          await closeIssue("Approval received, workflow will continue..", false)
+        } else if (constants.deniedWords.includes(resp.body[resp.body.length - 1].body.toLowerCase())) {
+          console.log(`${actionContext.assignees} Denied to proceed.`)
+          // Fail the build..
+          await closeIssue("Approval denied!!. Workflow will be marked to failure. ", true)
+        } else {
+          console.log('No matching comments provided.. for Approve or Deny')
+        }
+      }
+      else
+      {
+        console.log('Pending approval, awaiting ..')
+      }
+    }
+  })
+
+}
+
+
 async function updateApprovalIssueOnComments(): Promise<any> {
   
-  const req = {
+  const getComments_Request = {
     method: 'GET',
     uri: `${repoUrl}/issues/${actionContext.issueNumber}/comments`,
     headers: {
@@ -79,16 +124,15 @@ async function updateApprovalIssueOnComments(): Promise<any> {
     json: true
   }
    
-  console.log("Sending request...");
-  request.get(req, (error, response) => {
+  request.get(getComments_Request, (error, resp) => {
     if(error)
     {
       console.log("Error OCcured: "+ error)
     }
     else{
-      console.log("Status code "+ response.statusCode);
-      console.log("response is "+ JSON.stringify(response))
-      console.log("Response is " +response)
+      console.log("Status code "+ resp.statusCode);
+      console.log("response is "+ JSON.stringify(resp))
+      console.log("Response is " +resp)
     }
   })
 
@@ -250,7 +294,7 @@ async function closeIssue(comment: string, failWorkflow: boolean): Promise<any> 
 async function run(): Promise<void> {
   try {
     await createApprovalIssue()
-    timeTrigger = setInterval(updateApprovalIssueOnComments, 5000)
+    timeTrigger = setInterval(await checkCommentsToUpdateIssue, 5000)
     timeDurationCheck = setTimeout(async function () {
       console.log(
         'Approval waiting period elapsed. Approval request will be automatically closed and workflow status will be marked to Failed.'
