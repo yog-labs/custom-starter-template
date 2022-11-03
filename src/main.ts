@@ -75,7 +75,7 @@ async function checkCommentsToUpdateIssue(): Promise<any> {
       'Authorization': `Bearer  ${actionContext.token}`,
       'Content-Type': 'application/json',
       'Accept': 'application/vnd.github.v3+json',
-      'user-agent': 'custom-action'
+      'user-agent': 'manual-approval-action'
     },
     json: true
   }
@@ -211,9 +211,10 @@ async function closeIssue(comment: string, failWorkflow: boolean): Promise<any> 
     method: 'PATCH',
     uri: `${repoUrl}/issues/${actionContext.issueNumber}`,
     headers: {
-      Authorization: `Bearer  ${actionContext.token}`,
+      'Authorization': `Bearer  ${actionContext.token}`,
       'Content-Type': 'application/json',
-      Accept: 'application/vnd.github.v3+json'
+      'Accept': 'application/vnd.github.v3+json',
+      'user-agent': 'manual-approval-action'
     },
     data: closeIssuePayload
   }
@@ -229,9 +230,10 @@ async function closeIssue(comment: string, failWorkflow: boolean): Promise<any> 
     method: 'POST',
     uri: `${repoUrl}/issues/${actionContext.issueNumber}/comments`,
     headers: {
-      Authorization: `Bearer  ${actionContext.token}`,
+      'Authorization': `Bearer  ${actionContext.token}`,
       'Content-Type': 'application/json',
-      Accept: 'application/vnd.github.v3+json'
+      'Accept': 'application/vnd.github.v3+json',
+      'user-agent': 'manual-approval-action'
     },
     data: commentIssuePayload
   }
@@ -252,9 +254,10 @@ async function closeIssue(comment: string, failWorkflow: boolean): Promise<any> 
     method: 'PATCH',
     url: `${repoUrl}/issues/${actionContext.issueNumber}`,
     headers: {
-      Authorization: `Bearer  ${actionContext.token}`,
+      'Authorization': `Bearer  ${actionContext.token}`,
       'Content-Type': 'application/json',
-      Accept: 'application/vnd.github.v3+json'
+      'Accept': 'application/vnd.github.v3+json',
+      'user-agent': 'manual-approval-action'
     },
     data: failWorkflow ? updateIssuePayloadRejected : updateIssuePayloadApproved
   }
