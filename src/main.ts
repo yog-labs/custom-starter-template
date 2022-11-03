@@ -56,26 +56,18 @@ async function createApprovalIssue(): Promise<any> {
     data: createIssuePayload
   }
   
-  const { status, headers, data } = await octokit.request(`POST /repos/${actionContext.org}/${actionContext.repo}/issues`, createIssuePayload)
-  console.log("Status reported is " + status);
-  console.log("Header reported is " + headers);
-  console.log("data reported is "+ JSON.stringify(data));
-  
-   
-  
-  
-  
-  /* return await axios(createIssueRequest)
-    .then(res => {
-      console.log('Github Approval Issue successfully created !!')
-      actionContext.issueNumber = res.data.number
-      actionContext.status = res.data.state
-    })
-    .catch(error => {
-      console.log('Failed to create an Github Approval Issue.' + error)
-      if (error instanceof Error) core.setFailed(error.message)
-      throw error
-    }) */
+  try
+  {
+    const { status, headers, data } = await octokit.request(`POST /repos/${actionContext.org}/${actionContext.repo}/issues`, createIssuePayload)
+    actionContext.issueNumber = data.number
+    actionContext.status = data.state
+    console.log("Request status " + status);
+    console.log('Github Approval Issue successfully created !!')
+  } catch(error)  {
+    console.log('Failed to create an Github Approval Issue.' + error)
+    if (error instanceof Error) core.setFailed(error.message)
+    throw error
+  }
 }
 
 
