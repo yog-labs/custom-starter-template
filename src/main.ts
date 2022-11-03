@@ -82,8 +82,9 @@ async function updateApprovalIssueOnComments(): Promise<any> {
     Authorization: `Bearer  ${actionContext.token}`,
     'Content-Type': 'application/json',
     Accept: 'application/vnd.github.v3+json'
-  }})
-  console.log("response is "+ JSON.stringify(res));
+  }}).then(resp => {
+      console.log("response is "+ JSON.stringify(resp));
+   })
   return res;
 
 }
