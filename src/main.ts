@@ -34,14 +34,14 @@ function getBodyContent(): string {
 }
 
 async function createApprovalIssue(): Promise<any> {
-  let createIssuePayload = JSON.stringify({
+  let createIssuePayload = {
     owner: `${actionContext.owner}`,
     repo: `${actionContext.repo}`,
     title: `${actionContext.title}`,
     body: `${getBodyContent()}`,
     assignees: actionContext.assignees,
     labels: actionContext.labels
-  })
+  }
 
   let createIssueRequest = {
     method: 'post',
