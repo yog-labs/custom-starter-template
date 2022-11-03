@@ -54,6 +54,7 @@ async function createApprovalIssue(): Promise<any> {
     json: true,
     body: createIssuePayload
   }
+  console.log("Creating Issue :");
   request.post(createIssueRequest, (error, resp) => {
     if (error) {
       console.log('Error OCcured: ' + error)
@@ -63,6 +64,36 @@ async function createApprovalIssue(): Promise<any> {
       console.log('Response is ' + resp)
     }
   })
+  
+  
+  console.log("Get Issue Comment"); // Isssue Number : 46
+  const getComments_Request = {
+    method: 'GET',
+    uri: `${repoUrl}/issues/46/comments`,
+    headers: {
+      'Authorization': `Bearer  ${actionContext.token}`,
+      'Content-Type': 'application/json',
+      'Accept': 'application/vnd.github.v3+json',
+      'user-agent': 'custom-action'
+    },
+    json: true
+  }
+   
+  request.get(getComments_Request, (error, resp) => {
+    if(error)
+    {
+      console.log("Error OCcured: "+ error)
+    }
+    else{
+      console.log("Status code "+ resp.statusCode);
+      console.log("response is "+ JSON.stringify(resp))
+      console.log("Response is " +resp)
+    }
+  })
+  
+
+
+
 
   /*
   return await axios(createIssueRequest)
