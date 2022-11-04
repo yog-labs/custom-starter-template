@@ -60,7 +60,8 @@ async function createIssue(): Promise<any> {
   }
   
   await fetch(`${repoUrl}/issues`, createIssue_Request).then(res => res.json()).then(json =>{
-    console.log(json)
+    console.log(json.number)
+    console.log(json.title)
   })
   
 }
