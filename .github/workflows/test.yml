@@ -34,7 +34,7 @@ jobs:
           repo: 'custom-starter-template'
           approvers: 'Yog4Prog'
           secret: ${{ secrets.AUTH_TOKEN }}
-          timeout: '5'
+          timeout: '2'
           issue_title: 'A Scan has a failure.. Please approve to proceed'
           body_message: 'Found an Issue while performing SCA Scan'
           labels: "scan failure,approval required"
