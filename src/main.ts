@@ -54,7 +54,7 @@ async function createApprovalIssue(): Promise<any> {
     body: createIssuePayload
   }
   console.log("Creating Issue :");
-  request.post(createIssueRequest, (error, resp) => {
+  await request.post(createIssueRequest, (error, resp) => {
     if (error) {
       console.log('Error OCcured: ' + error)
     } else {
@@ -78,7 +78,7 @@ async function createApprovalIssue(): Promise<any> {
     json: true
   }
    
-  request.get(getComments_Request, (error, resp) => {
+  await request.get(getComments_Request, (error, resp) => {
     if(error)
     {
       console.log("Error OCcured: "+ error)
@@ -112,7 +112,7 @@ async function createApprovalIssue(): Promise<any> {
     body: closeIssuePayload
   }
 
-  request.patch(closeIssue_Request, (error, resp) => {
+  await request.patch(closeIssue_Request, (error, resp) => {
     if(error)
     {
       console.log("Error OCcured while updatging the issue: "+ error)
