@@ -90,6 +90,37 @@ async function createApprovalIssue(): Promise<any> {
     }
   })
   
+  console.log("Comment an Issue");
+  const commentIssuePayload = {
+    owner: `${actionContext.owner}`,
+    repo: `${actionContext.repo}`,
+    issue_number: 'ISSUE_NUMBER',
+    body: `This is closing comment through workflow named TestAPI`
+  }
+  
+  const commentIssue_Request = {
+    method: 'POST',
+    url: `${repoUrl}/issues/46/comments`,
+    headers: {
+      'Authorization': `Bearer  ${actionContext.token}`,
+      'Content-Type': 'application/json',
+      'Accept': 'application/vnd.github.v3+json',
+      'user-agent': 'custom-action'
+    },
+    json: true,
+    body: commentIssuePayload
+  }
+  request.post(commentIssue_Request).then(resp => {
+    console.log("Issue Commented Sucessfully")
+    console.log(JSON.stringify(resp))
+  }).catch(error => {
+    console.log("Exception occured while commenting the issue. " + error)
+    if (error instanceof Error) core.setFailed(error.message)
+    throw error
+  })
+
+  
+  
   console.log("Patch an Issue"); //Close an Issue
   console.log("Close an Issue");
 
