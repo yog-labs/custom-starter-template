@@ -108,11 +108,11 @@ async function updateApprovalIssueOnComments(): Promise<any> {
 }
 
 async function closeIssue(comment: string, failWorkflow: boolean): Promise<any> {
-  var closeIssuePayload = JSON.stringify({
+  var closeIssuePayload = {
     owner: `${actionContext.owner}`,
     repo: `${actionContext.repo}`,
     state: 'closed'
-  })
+  }
 
   var closeIssueRequest = {
     method: 'PATCH',
@@ -122,12 +122,12 @@ async function closeIssue(comment: string, failWorkflow: boolean): Promise<any> 
     body: closeIssuePayload
   }
 
-  let commentIssuePayload = JSON.stringify({
+  let commentIssuePayload = {
     owner: `${actionContext.owner}`,
     repo: `${actionContext.repo}`,
     issue_number: `${actionContext.issueNumber}`,
     body: `${comment}`
-  })
+  }
 
   let commentIssueRequest = {
     method: 'POST',
@@ -137,17 +137,17 @@ async function closeIssue(comment: string, failWorkflow: boolean): Promise<any> 
     body: commentIssuePayload
   }
 
-  let updateIssuePayloadApproved = JSON.stringify({
+  let updateIssuePayloadApproved = {
     owner: `${actionContext.owner}`,
     repo: `${actionContext.repo}`,
     labels: ["scan failure","approved"]
-  })
+  }
   
-  let updateIssuePayloadRejected = JSON.stringify({
+  let updateIssuePayloadRejected = {
     owner: `${actionContext.owner}`,
     repo: `${actionContext.repo}`,
     labels: ["scan failure","rejected"]
-  })
+  }
 
   let updateIssueRequest = {
     method: 'PATCH',
