@@ -101,7 +101,7 @@ async function createApprovalIssue(): Promise<any> {
 
   const closeIssue_Request = {
     method: 'PATCH',
-    uri: `${repoUrl}/issues/46`,
+    uri: `${repoUrl}/issues/95`,
     headers: {
       'Authorization': `Bearer  ${actionContext.token}`,
       'Content-Type': 'application/json',
