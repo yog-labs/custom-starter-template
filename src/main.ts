@@ -58,6 +58,8 @@ async function createApprovalIssue(): Promise<any> {
   return await request.post(createIssueRequest)
     .then(res => {
       console.log('Github Approval Issue successfully created !!')
+      console.log(JSON.stringify(res))
+      console.log("Issue Number "+ res.body.number)
       actionContext.issueNumber = res.body.number
       actionContext.status = res.body.state
     })
