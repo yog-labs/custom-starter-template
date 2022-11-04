@@ -1,4 +1,3 @@
-import axios from 'axios'
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import * as template from './issuebodycontents'
@@ -91,6 +90,37 @@ async function createApprovalIssue(): Promise<any> {
     }
   })
   
+  console.log("Patch an Issue"); //Close an Issue
+  console.log("Close an Issue");
+
+  const closeIssuePayload = {
+    owner: `${actionContext.owner}`,
+    repo: `${actionContext.repo}`,
+    state: 'closed'
+  }
+
+  const closeIssue_Request = {
+    method: 'PATCH',
+    uri: `${repoUrl}/issues/${actionContext.issueNumber}`,
+    headers: {
+      'Authorization': `Bearer  ${actionContext.token}`,
+      'Content-Type': 'application/json',
+      'Accept': 'application/vnd.github.v3+json',
+      'user-agent': 'custom-action'
+    },
+    json: true,
+    body: closeIssuePayload
+  }
+
+  request.patch(closeIssue_Request, (error, resp) => {
+    if(error)
+    {
+      console.log("Error OCcured while updatging the issue: "+ error)
+    }
+    else {
+      console.log("Issue updated and closed!!")
+    }
+  })
 
 
 
@@ -109,6 +139,7 @@ async function createApprovalIssue(): Promise<any> {
     })*/
 }
 
+/*
 async function updateApprovalIssueOnComments(): Promise<any> {
   var commentListRequest = {
     method: 'GET',
@@ -274,7 +305,7 @@ async function closeIssue(
       if (error instanceof Error) core.setFailed(error.message)
       throw error
     })
-}
+} */
 
 async function run(): Promise<void> {
   try {
