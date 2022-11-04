@@ -35,9 +35,9 @@ function getBodyContent(): string {
 
 async function testApiCall(): Promise<any> {
   console.log("Creating a new Issue");
-  createIssue()
+  await createIssue()
   console.log("Gettting issues comments");
-  getCommentsFromIssue()
+  await getCommentsFromIssue()
 }
 
 async function createIssue(): Promise<any> {
