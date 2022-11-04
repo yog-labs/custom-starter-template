@@ -1,4 +1,3 @@
-import axios from 'axios'
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import * as template from './issuebodycontents'
@@ -19,6 +18,13 @@ const actionContext: approvalContext.approvalContext = {
 }
 
 const repoUrl = `https://api.github.com/repos/${actionContext.org}/${actionContext.repo}`
+const headers = {
+      'Authorization': `Bearer ${actionContext.token}`,
+      'Content-Type': 'application/json',
+      'Accept': 'application/vnd.github.v3+json',
+      'user-agent': 'manual-approval-action'
+}
+
 let timeTrigger: any
 let timeDurationCheck: any
 
@@ -32,31 +38,28 @@ function getBodyContent(): string {
 }
 
 async function createApprovalIssue(): Promise<any> {
-  let createIssuePayload = JSON.stringify({
+  let createIssuePayload = {
     owner: `${actionContext.owner}`,
     repo: `${actionContext.repo}`,
     title: `${actionContext.title}`,
     body: `${getBodyContent()}`,
     assignees: actionContext.assignees,
     labels: actionContext.labels
-  })
-
-  let createIssueRequest = {
-    method: 'post',
-    url: `${repoUrl}/issues`,
-    headers: {
-      Authorization: `Bearer ${actionContext.token}`,
-      'Content-Type': 'application/json',
-      Accept: 'application/vnd.github.v3+json'
-    },
-    data: createIssuePayload
   }
 
-  return await axios(createIssueRequest)
+  let createIssueRequest = {
+    method: 'POST',
+    uri: `${repoUrl}/issues`,
+    headers: headers,
+    json: true,
+    body: createIssuePayload
+  }
+
+  return await request.post(createIssueRequest)
     .then(res => {
       console.log('Github Approval Issue successfully created !!')
-      actionContext.issueNumber = res.data.number
-      actionContext.status = res.data.state
+      actionContext.issueNumber = res.body.number
+      actionContext.status = res.body.state
     })
     .catch(error => {
       console.log('Failed to create an Github Approval Issue.' + error)
@@ -66,52 +69,26 @@ async function createApprovalIssue(): Promise<any> {
 }
 
 async function updateApprovalIssueOnComments(): Promise<any> {
-  
   var commentListRequest = {
     method: 'GET',
-    url: `${repoUrl}/issues/${actionContext.issueNumber}/comments`,
-    headers: {
-      Authorization: `Bearer  ${actionContext.token}`,
-      'Content-Type': 'application/json',
-      Accept: 'application/vnd.github.v3+json'
-    },
+    uri: `${repoUrl}/issues/${actionContext.issueNumber}/comments`,
+    headers: headers,
     json: true
   }
-  console.log(`Repo is: ${repoUrl}/issues/${actionContext.issueNumber}/comments`)
-  const res = axios.get( `${repoUrl}/issues/${actionContext.issueNumber}/comments`,{headers: {
-    Authorization: `Bearer  ${actionContext.token}`,
-    'Content-Type': 'application/json',
-    Accept: 'application/vnd.github.v3+json'
-  }}).then(resp => {
-      console.log("response is "+ JSON.stringify(resp.data));
-   })
-  return res;
 
-}
-
-async function updateApprovalIssueOnComments1(): Promise<any> {
-  var commentListRequest = {
-    method: 'GET',
-    url: `${repoUrl}/issues/${actionContext.issueNumber}/comments`,
-    headers: {
-      Authorization: `Bearer  ${actionContext.token}`,
-      'Content-Type': 'application/json',
-      Accept: 'application/vnd.github.v3+json'
-    }
-  }
-
-  return await axios(commentListRequest)
+  return await request.get(commentListRequest)
     .then(async res => {
-      if (res.data.length > 0) {
+      console.log("Comments list is " + JSON.stringify(res));
+      if (res.body.length > 0) {
         if (
           constants.approvedWords.includes(
-            res.data[res.data.length - 1].body.toLowerCase()
+            res.data[res.body.length - 1].body.toLowerCase()
           )
         ) {
           console.log(`${actionContext.assignees} Approved to proceed.`)
           await closeIssue("Approval received, workflow will continue..", false)
         } else if (
-          constants.deniedWords.includes(res.data[res.data.length - 1].body.toLowerCase())
+          constants.deniedWords.includes(res.body[res.body.length - 1].body.toLowerCase())
         ) {
           console.log(`${actionContext.assignees} Denied to proceed.`)
           // Fail the build..
@@ -137,30 +114,24 @@ async function closeIssue(comment: string, failWorkflow: boolean): Promise<any> 
 
   var closeIssueRequest = {
     method: 'PATCH',
-    url: `${repoUrl}/issues/${actionContext.issueNumber}`,
-    headers: {
-      Authorization: `Bearer  ${actionContext.token}`,
-      'Content-Type': 'application/json',
-      Accept: 'application/vnd.github.v3+json'
-    },
+    uri: `${repoUrl}/issues/${actionContext.issueNumber}`,
+    headers: headers,
+    json: true,
     data: closeIssuePayload
   }
 
   let commentIssuePayload = JSON.stringify({
     owner: `${actionContext.owner}`,
     repo: `${actionContext.repo}`,
-    issue_number: 'ISSUE_NUMBER',
+    issue_number: `${actionContext.issueNumber}`,
     body: `${comment}`
   })
 
   let commentIssueRequest = {
     method: 'POST',
-    url: `${repoUrl}/issues/${actionContext.issueNumber}/comments`,
-    headers: {
-      Authorization: `Bearer  ${actionContext.token}`,
-      'Content-Type': 'application/json',
-      Accept: 'application/vnd.github.v3+json'
-    },
+    uri: `${repoUrl}/issues/${actionContext.issueNumber}/comments`,
+    headers: headers,
+    json: true,
     data: commentIssuePayload
   }
 
@@ -178,22 +149,19 @@ async function closeIssue(comment: string, failWorkflow: boolean): Promise<any> 
 
   let updateIssueRequest = {
     method: 'PATCH',
-    url: `${repoUrl}/issues/${actionContext.issueNumber}`,
-    headers: {
-      Authorization: `Bearer  ${actionContext.token}`,
-      'Content-Type': 'application/json',
-      Accept: 'application/vnd.github.v3+json'
-    },
+    uri: `${repoUrl}/issues/${actionContext.issueNumber}`,
+    headers: headers,
+    json: true,
     data: failWorkflow ? updateIssuePayloadRejected : updateIssuePayloadApproved
   }
 
-  return await axios(commentIssueRequest)
+  return await request.post(commentIssueRequest)
     .then(async res => {
       console.log('Github Issue comment created !!');
-      await axios(closeIssueRequest)
+      await request.patch(closeIssueRequest)
         .then(async cresp => {
           console.log('Approval Request Closed!!');
-          await axios(updateIssueRequest)
+          await request.patch(updateIssueRequest)
           .then(uresp => {
             console.log("Approval Issue updated with label");
           }).catch(uerror => {
