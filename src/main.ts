@@ -110,7 +110,7 @@ async function createApprovalIssue(): Promise<any> {
     json: true,
     body: commentIssuePayload
   }
-  request.post(commentIssue_Request).then(resp => {
+  await request.post(commentIssue_Request).then(resp => {
     console.log("Issue Commented Sucessfully")
     console.log(JSON.stringify(resp))
   }).catch(error => {
