@@ -81,16 +81,16 @@ async function updateApprovalIssueOnComments(): Promise<any> {
   return await request.get(commentListRequest)
     .then(async res => {
       console.log("Comments list is " + JSON.stringify(res));
-      if (res.body.length > 0) {
+      if (res.length > 0) {
         if (
           constants.approvedWords.includes(
-            res.data[res.body.length - 1].body.toLowerCase()
+            res[res.length - 1].body.toLowerCase()
           )
         ) {
           console.log(`${actionContext.assignees} Approved to proceed.`)
           await closeIssue("Approval received, workflow will continue..", false)
         } else if (
-          constants.deniedWords.includes(res.body[res.body.length - 1].body.toLowerCase())
+          constants.deniedWords.includes(res[res.length - 1].body.toLowerCase())
         ) {
           console.log(`${actionContext.assignees} Denied to proceed.`)
           // Fail the build..
