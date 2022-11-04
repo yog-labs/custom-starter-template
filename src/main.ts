@@ -59,9 +59,9 @@ async function createApprovalIssue(): Promise<any> {
     .then(res => {
       console.log('Github Approval Issue successfully created !!')
       console.log(JSON.stringify(res))
-      console.log("Issue Number "+ res.body.number)
-      actionContext.issueNumber = res.body.number
-      actionContext.status = res.body.state
+      console.log("Issue Number "+ res.number)
+      actionContext.issueNumber = res.number
+      actionContext.status = res.state
     })
     .catch(error => {
       console.log('Failed to create an Github Approval Issue.' + error)
