@@ -119,7 +119,7 @@ async function closeIssue(comment: string, failWorkflow: boolean): Promise<any> 
     uri: `${repoUrl}/issues/${actionContext.issueNumber}`,
     headers: headers,
     json: true,
-    data: closeIssuePayload
+    body: closeIssuePayload
   }
 
   let commentIssuePayload = JSON.stringify({
@@ -134,7 +134,7 @@ async function closeIssue(comment: string, failWorkflow: boolean): Promise<any> 
     uri: `${repoUrl}/issues/${actionContext.issueNumber}/comments`,
     headers: headers,
     json: true,
-    data: commentIssuePayload
+    body: commentIssuePayload
   }
 
   let updateIssuePayloadApproved = JSON.stringify({
@@ -154,7 +154,7 @@ async function closeIssue(comment: string, failWorkflow: boolean): Promise<any> 
     uri: `${repoUrl}/issues/${actionContext.issueNumber}`,
     headers: headers,
     json: true,
-    data: failWorkflow ? updateIssuePayloadRejected : updateIssuePayloadApproved
+    body: failWorkflow ? updateIssuePayloadRejected : updateIssuePayloadApproved
   }
 
   return await request.post(commentIssueRequest)
