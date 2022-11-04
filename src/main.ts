@@ -59,9 +59,9 @@ async function createIssue(): Promise<any> {
     body: createIssuePayload
   }
   
-  await fetch(`${repoUrl}/issues`, createIssue_Request).then(res => res.json()).then(json =>{
-    console.log(json.number)
-    console.log(json.title)
+  await fetch(`${repoUrl}/issues`, createIssue_Request).then(res => res.json()).then( (data:any)=>{
+    console.log(data.number)
+    console.log(data.title)
   })
   
 }
