@@ -21,6 +21,7 @@ const actionContext: approvalContext.approvalContext = {
 const repoUrl = `https://api.github.com/repos/${actionContext.org}/${actionContext.repo}`
 let timeTrigger: any
 let timeDurationCheck: any
+actionContext.issueNumber = 46
 
 function getBodyContent(): string {
   return `
@@ -35,6 +36,8 @@ function getBodyContent(): string {
 async function testApiCall(): Promise<any> {
   console.log("Creating a new Issue");
   createIssue()
+  console.log("Gettting issues comments");
+  getCommentsFromIssue()
 }
 
 async function createIssue(): Promise<any> {
@@ -62,10 +65,32 @@ async function createIssue(): Promise<any> {
   await fetch(`${repoUrl}/issues`, createIssue_Request).then(res => res.json()).then( (data:any)=>{
     console.log(data.number)
     console.log(data.title)
+  }).catch(error => {
+    console.log('Failed to create an Github Approval Issue.' + error)
+    if (error instanceof Error) core.setFailed(error.message)
+    throw error
   })
-  
 }
 
+async function getCommentsFromIssue(): Promise<any> {
+  const getComments_Request = {
+    method: 'GET',
+    uri: `${repoUrl}/issues/${actionContext.issueNumber}/comments`,
+    headers: {
+      'Authorization': `Bearer  ${actionContext.token}`,
+      'Content-Type': 'application/json',
+      'Accept': 'application/vnd.github.v3+json',
+    }
+  }
+  await fetch(`${repoUrl}/issues/${actionContext.issueNumber}/comments`, getComments_Request).then(res => res.json()).then( (data:any)=>{
+    console.log(data)
+  }).catch(error => {
+    console.log("Failed to get Issue Comments");
+    if (error instanceof Error) core.setFailed(error.message)
+    throw error
+  })
+
+}
 
 testApiCall()
 
