@@ -59,10 +59,8 @@ async function createIssue(): Promise<any> {
     body: createIssuePayload
   }
   
-  await fetch(`${repoUrl}/issues`, createIssue_Request).then(resp => {
-    console.log('Status code ' + resp.status)
-    console.log('response is ' + JSON.stringify(resp.body))
-    console.log("Issue creatged..")
+  await fetch(`${repoUrl}/issues`, createIssue_Request).then(res => res.json()).then(json =>{
+    console.log(json)
   })
   
 }
