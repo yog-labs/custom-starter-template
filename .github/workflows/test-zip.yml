@@ -17,7 +17,7 @@ jobs:
           ls -ltr
       - name: Extract ZIP file
         run: |
-          unzip 10mb.zip -d ./udclient
+          unzip -o 10mb.zip -d ./udclient
       - name: Display Folder Struc
         run: |
           ls -ltr
