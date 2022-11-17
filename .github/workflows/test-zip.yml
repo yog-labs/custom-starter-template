@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Download ZIP File
         run: |
-          wget https://www.learningcontainer.com/sample-zip-files/#
+          wget https://www.sample-videos.com/zip/10mb.zip
       - name: Extract ZIP file
         run: |
           unzip sample-large-zip-file.zip -d ./udclient
