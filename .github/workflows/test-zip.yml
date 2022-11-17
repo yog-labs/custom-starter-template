@@ -1,0 +1,21 @@
+name: 'test-zip'
+on: # rebuild any PRs and main branch changes
+  workflow_dispatch:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build: 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download ZIP File
+      - run: |
+          wget -b https://www.learningcontainer.com/sample-zip-files/#
+      - name: Extract ZIP file
+      - run: |
+          unzip sample-large-zip-file.zip -d ./udclient
+      - name: Display Folder Struc
+        run: |
+          ls -ltr
+  
