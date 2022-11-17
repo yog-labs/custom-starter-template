@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Download ZIP File
         run: |
-          wget -O https://www.sample-videos.com/zip/10mb.zip
+          wget -o https://www.sample-videos.com/zip/10mb.zip
       - name: Display Folder Struc
         run: |
           ls -ltr
